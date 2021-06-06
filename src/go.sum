@@ -1,0 +1,6 @@
+github.com/craigmj/commander v0.0.0-20190614004124-4888e7f57cc4 h1:YgJCWIMWk4Iry3SM0qvAyx7Xsp3BSFSAcRMf9B0TnlU=
+github.com/craigmj/commander v0.0.0-20190614004124-4888e7f57cc4/go.mod h1:oQ3mDG5IHofvAS6+Y2OjMYRBJBinCE8tyAgQuR+U60k=
+github.com/golang/glog v0.0.0-20210429001901-424d2337a529 h1:2voWjNECnrZRbfwXxHB1/j8wa6xdKn85B5NzgVL/pTU=
+github.com/golang/glog v0.0.0-20210429001901-424d2337a529/go.mod h1:SBH7ygxi8pfUlaOkMMuAQtPIUF8ecWP5IEl/CR7VP2Q=
+github.com/juju/errors v0.0.0-20200330140219-3fe23663418f h1:MCOvExGLpaSIzLYB4iQXEHP4jYVU6vmzLNQPdMVrxnM=
+github.com/juju/errors v0.0.0-20200330140219-3fe23663418f/go.mod h1:W54LbzXuIE0boCoNJfwqpmkKJ1O4TCTZMetAt6jGk7Q=

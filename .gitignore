@@ -1,0 +1,6 @@
+.hg*
+bin
+test
+jstest.go
+example*
+pkg
