@@ -64,7 +64,14 @@ func (i *ImportList) AddFunction(e *ast.FuncDecl) error {
 
 func (i *ImportList) AddImports(imports ...string) string {
 	for _, imp := range imports {
-		i.getImport("", `"`+imp+`"`)
+		iparts := strings.Split(imp,` `)
+		if 1==len(iparts) {
+			iparts = []string{``, iparts[0]}
+		}
+		if 2<len(iparts) {
+			panic(fmt.Sprintf(`Import '%s' does not parse`, imp)
+		}
+		i.getImport(iparts[0], `"`+iparts[1]+`"`)
 	}
 	return ""
 }

@@ -19,20 +19,18 @@ context.{{.Name}}(
 
 import (
 {{with .Imports -}}
-	{{.AddImports "errors" "fmt" "io" "encoding/json" "net/http" "github.com/golang/glog" "bytes"}}
+	{{.AddImports "errors" "fmt" "io" "encoding/json" "net/http" "bytes" "_golog log"}}
 	{{range .Imports }}{{if .ShouldImport -}}
 	{{.Name}} {{.Path}}{{end}}
 	{{end -}}
 {{end}}
-
-	_root "{{.RootPackagePath}}"
 )
 
 // Just a placeholder to prevent errors if fmt isn't used
 var _ = fmt.Println
 
-/** Logger is a simple logging interface that will by default write to glog.
- * To provide your own logger, set the jsonrpc.Log class to an instance implementing
+/** Logger is a simple logging interface that will by default write to log.
+ * To provide your own logger, set the Log class to an instance implementing
  * the Logger interface.
  */
 type Logger interface {
@@ -41,8 +39,8 @@ type Logger interface {
 }
 
 type logger struct {}
-func (l *logger) Infof(format string, args ...interface{}) { glog.Infof(format, args...)}
-func (l *logger) Errorf(format string, args ...interface{}) { glog.Errorf(format, args...)}
+func (l *logger) Infof(format string, args ...interface{}) { _golog.Printf(format, args...)}
+func (l *logger) Errorf(format string, args ...interface{}) { _golog.Printf("ERROR: "+format, args...)}
 
 var Log Logger
 func init() {
@@ -54,7 +52,7 @@ func init() {
  * handler.
  */
 func HttpHandlerFunc(w http.ResponseWriter, r *http.Request) {
-	if err := _root.{{$ConnectionClassConstructor}}(w,r,func(conn *_root.{{$ConnectionClass}}) error {
+	if err := {{$ConnectionClassConstructor}}(w,r,func(conn *{{$ConnectionClass}}) error {
 		return ProcessJsonRpc(r.Body, w, conn)
 	}); nil!=err {
 		Log.Errorf("Error occurred: %s", err.Error())
@@ -92,7 +90,7 @@ type jsonResponse struct {
 // ProcessJsonRpc processes a json rpc request, reading 
 // from the io.Reader and sending the
 // result to the io.Writer.
-func ProcessJsonRpc(in io.Reader, out io.Writer, conn *_root.{{$ConnectionClass}}) error {
+func ProcessJsonRpc(in io.Reader, out io.Writer, conn *{{$ConnectionClass}}) error {
 	var buf bytes.Buffer
 	var err error
 	io.Copy(&buf, in)
@@ -105,7 +103,7 @@ func ProcessJsonRpc(in io.Reader, out io.Writer, conn *_root.{{$ConnectionClass}
 		errorJsonRpc(out, request.Id, JSONRPC_ERROR_PARSE_ERROR, err, nil)
 		return err
 	}
-	if err = conn.Context(func (context *_root.{{.ClassName}})error {
+	if err = conn.Context(func (context *{{.ClassName}})error {
 		switch request.Method {
 		{{range .Methods}}
 		{{if .Abbreviation}}

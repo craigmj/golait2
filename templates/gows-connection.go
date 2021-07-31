@@ -67,7 +67,7 @@ func WsHandlerFunc(w http.ResponseWriter, r *http.Request) {
 			case websocket.BinaryMessage:
 				// go func () {
 				// 	var buf bytes.Buffer
-				// 	processJsonRpc(in, &buf, context)
+				// 	ProcessJsonRpc(in, &buf, context)
 				// 	OUT <- buf.Bytes()
 				// }()
 				/*
@@ -79,14 +79,14 @@ func WsHandlerFunc(w http.ResponseWriter, r *http.Request) {
 				// Because of how gorilla websocket NextReader and NextWriter
 				// work, we can't run this in a goroutine, which seems a pity...
 
-				processJsonRpc(in, out, context)
+				ProcessJsonRpc(in, out, context)
 				out.Close()
 				*/
 				var buf bytes.Buffer
 				io.Copy(&buf, in)
 				go func() {
 					var outbuf bytes.Buffer
-					processJsonRpc(bytes.NewReader(buf.Bytes()), &outbuf, conn)
+					ProcessJsonRpc(bytes.NewReader(buf.Bytes()), &outbuf, conn)
 					connLock.Lock()
 					wsConn.WriteMessage(websocket.TextMessage, outbuf.Bytes())
 					connLock.Unlock()
