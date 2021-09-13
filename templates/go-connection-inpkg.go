@@ -120,7 +120,7 @@ func ProcessJsonRpc(in io.Reader, out io.Writer, conn *{{$ConnectionClass}}) err
 			{{if .Parameters}}
 			args := struct {
 				{{range $i,$p := .Parameters}}
-				{{$p.Field.TitleName}} {{$p.Field.GoType "_root"}} `json:"{{$i}}"`
+				{{$p.Field.TitleName}} {{$p.Field.GoType ""}} `json:"{{$i}}"`
 				{{end}}
 			}{}
 

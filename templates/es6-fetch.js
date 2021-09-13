@@ -14,7 +14,7 @@ class {{.ClassName}}Http {
 	}
 	setTimeout (ts) {
 		this._timeout = ts;
-	}
+	}	
 	reject(reject, err) {
 		reject(err);
 	}

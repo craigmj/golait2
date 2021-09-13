@@ -1,6 +1,7 @@
 package parser
 
 import (
+	`fmt`
 	"errors"
 	"go/ast"
 	"path/filepath"
@@ -69,7 +70,7 @@ func (i *ImportList) AddImports(imports ...string) string {
 			iparts = []string{``, iparts[0]}
 		}
 		if 2<len(iparts) {
-			panic(fmt.Sprintf(`Import '%s' does not parse`, imp)
+			panic(fmt.Sprintf(`Import '%s' does not parse`, imp))
 		}
 		i.getImport(iparts[0], `"`+iparts[1]+`"`)
 	}
