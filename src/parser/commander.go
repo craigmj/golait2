@@ -229,6 +229,9 @@ func FullPackageNameForFile(infile string) (string, error) {
 			return ``, errors.Trace(err)
 		}
 		parts := filepath.SplitList(fullpath)
+		if (2>len(parts)) {
+			return ``, errors.Trace(fmt.Errorf(`Failed to find %s in GOPATH (%s): if you're using modules, please disable GOPATH`, infile, gopath))
+		}
 		return filepath.Join(parts[1:len(parts)-1]...), nil
 	}
 	// Without a GOPATH, we find the module name and module root directory.
