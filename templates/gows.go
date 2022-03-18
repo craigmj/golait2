@@ -3,6 +3,8 @@ package {{.PackageName}}
 {{$ConnectionClass := .ConnectionClass}}
 {{$ConnectionClassConstructor := .ConnectionClassConstructor}}
 
+// gows.go template
+
 import (
 	"bytes"
 	"io"
@@ -20,6 +22,7 @@ import (
 var upgrader = websocket.Upgrader{
     ReadBufferSize:  1024,
     WriteBufferSize: 1024,
+    CheckOrigin: func(*http.Request) bool { return true },
 }
 
 func WsHandlerFunc(w http.ResponseWriter, r *http.Request) {

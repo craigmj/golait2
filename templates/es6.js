@@ -1,4 +1,4 @@
-
+{{if .JsExport}}export {{end -}}
 class {{.ClassName}}Http {
 	constructor(path="/rpc/{{.ClassName}}/json", server="", _timeout=0) {
 		this._timeout = 0;

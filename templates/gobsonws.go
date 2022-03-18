@@ -1,5 +1,7 @@
 package {{.PackageName}}
 
+// gobsonws.go template
+
 import (
 	"bytes"
 	"io"
@@ -15,6 +17,7 @@ import (
 var bson_upgrader = websocket.Upgrader{
     ReadBufferSize:  1024,
     WriteBufferSize: 1024,
+    CheckOrigin: func (*http.Request) bool { return true },
 }
 
 func WsBsonHandlerFunc(w http.ResponseWriter, r *http.Request) {

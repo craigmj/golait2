@@ -248,7 +248,7 @@ func FullPackageNameForFile(infile string) (string, error) {
 	return filepath.Join(modName, filepath.Dir(rel)), nil
 }
 
-func GenerateTemplate(outfile string, out io.Writer, infile, rpcType, rpcConstructor, packageName, templateFile string, recoverFlag bool, connectionClass, connectionConstructor string, jsApply bool) error {
+func GenerateTemplate(outfile string, out io.Writer, infile, rpcType, rpcConstructor, packageName, templateFile string, recoverFlag bool, connectionClass, connectionConstructor string, jsApply bool, jsExport bool) error {
 	if !recoverFlag {
 		fmt.Println("GENERATING GOLAIT2 template from " + infile + " without RECOVERY - use for DEBUG builds only")
 	}
@@ -269,6 +269,7 @@ func GenerateTemplate(outfile string, out io.Writer, infile, rpcType, rpcConstru
 		return err
 	}
 	class.JsApply = jsApply
+	class.JsExport = jsExport
 
 	templateFile, err = findTemplate(templateFile)
 	if nil != err {
@@ -320,6 +321,7 @@ func GenerateCommand() *commander.Command {
 	argTemplate := fs.String("tem", "go", "Template file to use (no suffix required)")
 	recoverFlag := fs.Bool("recover", true, "Auto-recover from PANICS (set to true for production)")
 	jsApply := fs.Bool("jsApply", false, "Use .apply when calling return functions")
+	jsExport := fs.Bool(`jsexport`, false, `Use export on created js classes`)
 
 	connClass := fs.String("connectionClass", "", "Connection type to set in API base type - API base type must enclose the Connection")
 	connConstructor := fs.String("connectionConstructor", "", "Connection method to create the API type")
@@ -374,6 +376,6 @@ func GenerateCommand() *commander.Command {
 			}
 			glog.Infof("WORKING Directory = %s", wd)
 
-			return GenerateTemplate(*argOut, out, inputFile, *argType, *argConstructor, packageName, *argTemplate, *recoverFlag, *connClass, *connConstructor, *jsApply)
+			return GenerateTemplate(*argOut, out, inputFile, *argType, *argConstructor, packageName, *argTemplate, *recoverFlag, *connClass, *connConstructor, *jsApply, *jsExport)
 		})
 }

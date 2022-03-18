@@ -23,6 +23,7 @@ type ClassDefinition struct {
 	Imports *ImportList         // Imports required in our function signatures
 	Methods []*MethodDefinition // All the methods in the Class
 	JsApply bool                // JsApply uses the .apply calling method for js calls
+	JsExport bool 				// JsExport if we should add 'export' to our class definitions
 }
 
 // NewClassDefinition returns a new class defined from the

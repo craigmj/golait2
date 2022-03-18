@@ -1,4 +1,4 @@
-class {{.ClassName}}Ws {
+{{if .JsExport}}export {{end -}}class {{.ClassName}}Ws {
 	constructor(path="/rpc/{{.ClassName}}/json/ws", server="") {
 		if (""== server) {
 			server = "ws" +

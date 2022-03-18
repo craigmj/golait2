@@ -5,6 +5,7 @@
 // addListener() will receive transport_opened(), transport_closed() and
 // transport_received() callback, unless an earlier listener returns 'true' 
 // for transport_received()
+{{if .JsExport}}export {{end -}}
 class {{.ClassName}}Transport {
 	constructor(baseTransport) {
 		this.listeners = [];
@@ -55,6 +56,7 @@ class {{.ClassName}}Transport {
 
 // TransportWs uses a Websocket to send/receive data for a generic
 // transport
+{{if .JsExport}}export {{end -}}
 class {{.ClassName}}TransportWs {
 	constructor(wsfactory) {
 		this.wsfactory = wsfactory;
@@ -136,6 +138,7 @@ class {{.ClassName}}TransportWs {
 
 // {{.ClassName}}TransportHttp does http(s) transport
 // for messaging. It sends responses immediately.
+{{if .JsExport}}export {{end -}}
 class {{.ClassName}}TransportHttp {
 	// fetchf should be something like
 	// 			fetch(this.url + "?" + method, {
@@ -192,6 +195,7 @@ class {{.ClassName}}TransportHttp {
  * http or ws. The router handles the method call and responses,
  * while the transport is responsible for delivery and receipt to the server.
  */
+{{if .JsExport}}export {{end -}}
 class {{.ClassName}}Router {
 	constructor(transport, clientApi=null) {
 		this.transport = new {{.ClassName}}Transport(transport);
