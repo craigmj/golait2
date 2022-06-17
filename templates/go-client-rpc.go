@@ -6,7 +6,6 @@ import (
 	{{.Name}} {{.Path}}{{end}}
 	{{end -}}
 {{end}}
-
 	`github.com/ethereum/go-ethereum/rpc`
 	`github.com/juju/errors`
 )

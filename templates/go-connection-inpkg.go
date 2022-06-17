@@ -1,7 +1,6 @@
 package {{.PackageName}}
 {{$packageName := .PackageName -}}
 {{$Recover := .Recover -}}
-
 {{$ConnectionClass := .ConnectionClass -}}
 {{$ConnectionClassConstructor := .ConnectionClassConstructor -}}
 
@@ -15,7 +14,7 @@ context.{{.Name}}(
 			args.{{$p.Field.TitleName}},
 		{{end }}
 				)
-{{end}}
+{{end -}}
 
 import (
 {{with .Imports -}}
@@ -41,6 +40,16 @@ type Logger interface {
 type logger struct {}
 func (l *logger) Infof(format string, args ...interface{}) { _golog.Printf(format, args...)}
 func (l *logger) Errorf(format string, args ...interface{}) { _golog.Printf("ERROR: "+format, args...)}
+
+type Golait2ErrorLogger struct{}
+func (l *Golait2ErrorLogger) Infof(string, ...interface{}) {}
+func (l *Golait2ErrorLogger) Errorf(format string, args ...interface{}) { _golog.Printf("ERROR: " + format, args...)}
+
+type Golait2NullLogger struct{}
+func (l *Golait2NullLogger) Infof(string, ...interface{}) {}
+func (l *Golait2NullLogger) Errorf(string, ...interface{}) {}
+
+
 
 var Log Logger
 func init() {
@@ -105,21 +114,21 @@ func ProcessJsonRpc(in io.Reader, out io.Writer, conn *{{$ConnectionClass}}) err
 	}
 	if err = conn.Context(func (context *{{.ClassName}})error {
 		switch request.Method {
-		{{range .Methods}}
+		{{range .Methods -}}
 		{{if .Abbreviation}}
 		case "{{.Abbreviation}}":
 			fallthrough
-		{{end}}
+		{{end -}}
 		case "{{.Name}}":
 			{{/*
 			I only really need to consider a few types
 			Numbers, Strings, booleans, structs
 			since JSON doesn't support that many types
 			itself.
-			*/}}
-			{{if .Parameters}}
+			*/ -}}
+			{{if .Parameters -}}
 			args := struct {
-				{{range $i,$p := .Parameters}}
+				{{range $i,$p := .Parameters -}}
 				{{$p.Field.TitleName}} {{$p.Field.GoType ""}} `json:"{{$i}}"`
 				{{end}}
 			}{}
@@ -131,7 +140,7 @@ func ProcessJsonRpc(in io.Reader, out io.Writer, conn *{{$ConnectionClass}}) err
 				errorJsonRpc(out, request.Id, JSONRPC_ERROR_INVALID_PARAMS, err, nil)
 				return err
 			}
-			{{range $i, $p := .Parameters}}
+			{{range $i, $p := .Parameters -}}
 			if err = json.Unmarshal(request.Params[{{$i}}], &args.{{$p.Field.TitleName}});
 				nil!=err {
 				errorJsonRpc(out, request.Id, JSONRPC_ERROR_INVALID_PARAMS, fmt.Errorf(
@@ -139,7 +148,7 @@ func ProcessJsonRpc(in io.Reader, out io.Writer, conn *{{$ConnectionClass}}) err
 				return err
 			}
 			{{end}}
-			{{end}}
+			{{- end}}
 
 			// // Decoding request.Params as an object
 			// err := json.Unmarshal(request.Params, &args)
@@ -147,18 +156,18 @@ func ProcessJsonRpc(in io.Reader, out io.Writer, conn *{{$ConnectionClass}}) err
 			// 	errorJsonRpc(out, request.Id, JSONRPC_ERROR_INVALID_PARAMS, err, nil)
 			// 	return
 			// }
-			{{if .Results.Length}}
+			{{if .Results.Length -}}
 			result := make([]interface{}, {{.Results.Length}})
-			{{else}}
+			{{else -}}
 			result := []interface{}{}
-			{{end}}
+			{{- end}}
 
 			if err = func() (err error) {
 				{{/*
 					We catch any panic inside the method itself
 					and convert it into an error return
-				*/}}
-				{{if $Recover}}
+				*/ -}}
+				{{if $Recover -}}
 				defer func() {
 					if r:=recover(); nil!=r {
 						if e, ok := r.(error); ok {
@@ -168,11 +177,11 @@ func ProcessJsonRpc(in io.Reader, out io.Writer, conn *{{$ConnectionClass}}) err
 						}
 					}
 				}()
-				{{end}}
+				{{- end}}
 
-				{{if .Results.Length}}
+				{{if .Results.Length -}}
 					{{range .Results.LengthArray}}{{if .}},{{end}}result[{{.}}]{{end}} = {{template "execute" .}}
-					{{if .Results.IsErrorLast}}
+					{{if .Results.IsErrorLast -}}
 					if (nil!=result[{{.Results.LastElementIndex}}]) {
 						return result[{{.Results.LastElementIndex}}].(error)
 					}
@@ -180,17 +189,16 @@ func ProcessJsonRpc(in io.Reader, out io.Writer, conn *{{$ConnectionClass}}) err
 					 If the method ends in an error, and we don't have
 					 an error after calling the method, we remove the error :
 					 no need to return it to the caller.
-					*/}}
+					*/ -}}
 					result = result[0:{{.Results.LastElementIndex}}]
-					{{end}}{{/* Of No last error in result */}}
-
-				{{else}}
+					{{end}}{{/* Of No last error in result */ -}}
+				{{else -}}
 				{{/*
 				 If the method returns no result, we still execute
 				 it in the web server thread since it might panic
-				 */}}
+				 */ -}}
 				{{template "execute" .}}
-				{{end}}				
+				{{end -}}				
 				return nil
 			}(); nil!=err {
 				errorJsonRpc(out, request.Id, JSONRPC_ERROR_APPLICATION_ERROR, err, nil)
@@ -200,7 +208,7 @@ func ProcessJsonRpc(in io.Reader, out io.Writer, conn *{{$ConnectionClass}}) err
 			{{/*
 				Our result is an []interface{}
 				with all the values we want to return
-			*/}}
+			*/ -}}
 			response := jsonResponse{
 				Jsonrpc:"2.0",
 				Id: request.Id,

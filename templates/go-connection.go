@@ -44,6 +44,8 @@ type logger struct {}
 func (l *logger) Infof(format string, args ...interface{}) { glog.Infof(format, args...)}
 func (l *logger) Errorf(format string, args ...interface{}) { glog.Errorf(format, args...)}
 
+var ErrorLog func(error)
+
 var Log Logger
 func init() {
 	Log = &logger{}
@@ -231,8 +233,11 @@ func ProcessJsonRpc(in io.Reader, out io.Writer, conn *_root.{{$ConnectionClass}
 
 
 // errorJsonRpc sends a JSONRpcError back to the client.
-func errorJsonRpc(out io.Writer, id interface{}, code int, err error, data interface{}) {
+func errorJsonRpc(out io.Writer, id interface{}, code int, err error, data interface{}) {	
 	Log.Infof("ERROR on JsonRPC: %d, %s {%q}", code, err, data)
+	if nil!=ErrorLog {
+		ErrorLog(err)
+	}
 	response := jsonResponse{
 		Jsonrpc:"2.0",
 		Id: id,
