@@ -59,7 +59,7 @@ func hasGOPATH() bool {
 // findFileToRoot searches from the dir to the root of the filesystem
 // looking for a file named filename.
 func findFileToRoot(dir, filename string) (string, error) {
-	fmt.Println("findFileToRoot dir = ", dir, ", filename=", filename)
+	// fmt.Println("findFileToRoot dir = ", dir, ", filename=", filename)
 	_, err := os.Stat(filepath.Join(dir, filename))
 	if nil==err {
 		return filepath.Join(dir, filename), nil
